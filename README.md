@@ -1,33 +1,25 @@
-# interactive-election-party-colours
+# interactive-pill-text
 
-This project automatically highlights party names in an article when they are wrapped in `<strong>` tags. It replaces them with a Svelte component that applies the official party colours.
+This project automatically highlights keywords in an article when they are wrapped in `<strong>` tags. It replaces them with a Svelte component that applies user-defined colours and optionally an icon.
 
 ## How it works
 
-The script scans the DOM for all `<strong>` tags. If the text content matches a keyword defined for a party, it mounts the `InlineHighlights` component to replace the element with a styled "pill" representation.
+The script scans the DOM for all `<strong>` tags. If the text content matches a keyword defined in a Scrollyteller `pills` mount, it mounts the `InlineHighlights` component to replace the element with a styled "pill" representation.
 
 ## Configuration
 
-Parties, their keywords, and their associated background/foreground colours are configured in `src/constants.ts`.
+Pill configurations are dynamic and defined via Scrollyteller mounts in the article.
 
-### Example Configuration:
+### Example Mount:
 
-```typescript
-export const PARTIES: Record<string, PartyConfig> = {
-  labor: {
-    keywords: ['labor', 'alp', 'australian labor party'],
-    bg: '#e11f30',
-    fg: 'white'
-  }
-  // ...
-};
-```
+`#pillsKEYWORDdownCOLOURe01a22TEXTffffffICON2026finger`
 
-## Adding new parties
+- **keyword**: The text to match (case-insensitive).
+- **colour**: The background hex colour (without #).
+- **text**: The foreground hex colour (without #).
+- **icon**: (Optional) Icon identifier (4-digit year + name, e.g., `2026finger`).
 
-To add a new party or modify existing ones, edit the `PARTIES` object in `src/constants.ts`.
+## Icon Resolution
 
-1.  **key**: A semantic name for the party.
-2.  **keywords**: An array of strings used to match text in `<strong>` tags (case-insensitive).
-3.  **bg**: The background hex colour.
-4.  **fg**: The text colour (use something with high contrast against the background).
+Icons are resolved to the following URL pattern:
+`https://www.abc.net.au/res/sites/news-projects/interactive-pill-text/icons/{year}/{name}.webp`

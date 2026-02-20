@@ -1,28 +1,26 @@
 import { whenDOMReady } from '@abcnews/env-utils';
 import { mount } from 'svelte';
 import InlineHighlights from './components/InlineHighlights/InlineHighlights.svelte';
-import { PARTIES } from './constants';
-import type { PartyConfig } from './constants';
+import type { PillConfig } from './constants';
+import { selectMounts } from '@abcnews/mount-utils';
+import parse from '@abcnews/alternating-case-to-object';
 
-function getPartyConfig(text: string): PartyConfig | null {
+let pillConfigs: PillConfig[] = [];
+
+function getPillConfig(text: string): PillConfig | null {
   const normalizedText = text.toLowerCase().trim();
-  for (const config of Object.values(PARTIES)) {
-    if (config.keywords.some(keyword => normalizedText.includes(keyword))) {
-      return config;
-    }
-  }
-  return null;
+  return pillConfigs.find(config => normalizedText.includes(config.keyword.toLowerCase())) || null;
 }
 
 /**
  * Automatically find all <strong> tags and replace them with InlineHighlights components
- * if they match any party keywords.
+ * if they match any pill keywords.
  */
 function autoColorStrongTags() {
   const strongTags = document.querySelectorAll('strong');
   strongTags.forEach(strong => {
     const text = strong.textContent || '';
-    const config = getPartyConfig(text);
+    const config = getPillConfig(text);
 
     if (config) {
       const wrapper = document.createElement('span');
@@ -32,8 +30,9 @@ function autoColorStrongTags() {
         target: wrapper,
         props: {
           name: text,
-          bg: config.bg,
-          fg: config.fg
+          bg: `#${config.colour}`,
+          fg: `#${config.text}`,
+          icon: config.icon
         }
       });
     }
@@ -42,9 +41,12 @@ function autoColorStrongTags() {
 
 // Ensure DOM is ready before running auto-replacement
 whenDOMReady.then(() => {
+  pillConfigs = selectMounts('pills').map(pill => parse(pill.id) as unknown as PillConfig);
+  console.log({ pills: pillConfigs });
+
   autoColorStrongTags();
 });
 
 if (process.env.NODE_ENV === 'development') {
-  console.debug(`[interactive-election-party-colours] public path: ${__webpack_public_path__}`);
+  console.debug(`[interactive-pill-text] public path: ${__webpack_public_path__}`);
 }
