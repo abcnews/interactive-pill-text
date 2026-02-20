@@ -30,8 +30,9 @@ function autoColorStrongTags() {
         target: wrapper,
         props: {
           name: text,
-          bg: `#${config.colour}`,
-          fg: `#${config.text}`,
+          colour: `#${config.colour}`,
+          text: `#${config.text}`,
+          border: `#${config.border}`,
           icon: config.icon
         }
       });

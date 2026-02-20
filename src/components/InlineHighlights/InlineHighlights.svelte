@@ -5,24 +5,39 @@
     /** The text to display inside the pill */
     name: string;
     /** Background colour (css hex or name) */
-    bg?: string;
+    colour?: string;
     /** Foreground colour (css hex or name) */
-    fg?: string;
+    text?: string;
+    /** Border colour (css hex or name) */
+    border?: string;
     /** Icon name, prefixed with 4-digit year (e.g. 2026finger) */
     icon?: string;
   }
 
-  let { name, bg, fg, icon }: Props = $props();
+  let { name, colour, text, border, icon }: Props = $props();
 
   const iconUrl = $derived.by(() => {
     if (!icon) return null;
     const year = icon.substring(0, 4);
-    const name = icon.substring(4);
-    return `https://www.abc.net.au/res/sites/news-projects/interactive-pill-text/icons/${year}/${name}.webp`;
+    let name = icon.substring(4);
+    let extension = 'webp';
+
+    if (name.endsWith('svg')) {
+      extension = 'svg';
+      name = name.slice(0, -3);
+    }
+
+    return `https://www.abc.net.au/res/sites/news-projects/interactive-pill-text/icons/${year}/${name}.${extension}`;
   });
 </script>
 
-<span class="inline-highlight" class:inline-highlight--with-icon={iconUrl} style:--bg={bg} style:--fg={fg}>
+<span
+  class="inline-highlight"
+  class:inline-highlight--with-icon={iconUrl}
+  style:--bg={colour}
+  style:--fg={text}
+  style:--border={border}
+>
   {#if iconUrl}
     <img src={iconUrl} alt="" class="inline-highlight__icon" />
   {/if}
@@ -31,41 +46,30 @@
 
 <style lang="scss">
   .inline-highlight {
-    display: inline-flex;
-    padding: 0rem 0.375rem;
-    justify-content: center;
-    align-items: center;
-    align-self: stretch;
-    border-radius: 0.25rem;
-    background: var(--bg, #f1f1f1);
-    color: var(--fg, black);
-    font-family: ABCSans, sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 125%;
-    overflow: hidden;
     position: relative;
-    border: none;
-    gap: 0.25rem;
-
+    color: var(--fg, black);
+    background: var(--bg, white);
+    border-radius: 4px;
+    border: 3px solid var(--border, var(--background, white));
+    font-family: 'ABC Sans Nova';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+    padding: 0 4px;
+    white-space: nowrap;
     &--with-icon {
-      padding-right: calc(1.5rem + 0.2rem);
-    }
-
-    // Fallback if no bg color found
-    &:not([style*='--bg']) {
-      background: #f1f1f1;
-      color: black;
-      border: 1px solid black;
+      padding-right: calc(4px + 16px + 2px);
     }
 
     .inline-highlight__icon {
-      width: 1.25rem;
-      height: calc(100% - 0.2rem);
+      width: 16px;
+      height: 16px;
       object-fit: contain;
       position: absolute;
-      right: 0.2rem;
-      top: 0.1rem;
+      right: 2px;
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
 </style>
