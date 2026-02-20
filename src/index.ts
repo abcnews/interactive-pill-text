@@ -43,8 +43,6 @@ function autoColorStrongTags() {
 // Ensure DOM is ready before running auto-replacement
 whenDOMReady.then(() => {
   pillConfigs = selectMounts('pills').map(pill => parse(pill.id) as unknown as PillConfig);
-  console.log({ pills: pillConfigs });
-
   autoColorStrongTags();
 });
 
