@@ -52,7 +52,7 @@
     border-radius: 4px;
     border: 3px solid var(--border, var(--background, white));
     font-family: ABCSans;
-    font-size: 18px;
+    font-size: 0.9em;
     font-style: normal;
     font-weight: 700;
     line-height: 150%;
