@@ -51,7 +51,7 @@
     background: var(--bg, white);
     border-radius: 4px;
     border: 3px solid var(--border, var(--background, white));
-    font-family: 'ABC Sans Nova';
+    font-family: ABCSans;
     font-size: 18px;
     font-style: normal;
     font-weight: 700;
