@@ -9,7 +9,7 @@ let pillConfigs: PillConfig[] = [];
 
 function getPillConfig(text: string): PillConfig | null {
   const normalizedText = text.toLowerCase().trim();
-  return pillConfigs.find(config => normalizedText.includes(config.keyword.toLowerCase())) || null;
+  return pillConfigs.find(config => normalizedText.includes(String(config.keyword).toLowerCase())) || null;
 }
 
 /**
