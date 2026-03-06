@@ -1,6 +1,4 @@
 <script lang="ts">
-  import FireFont from '../FireFont/FireFont.svelte';
-
   interface Props {
     /** The text to display inside the pill */
     name: string;
@@ -27,27 +25,46 @@
       name = name.slice(0, -3);
     }
 
-    return `https://www.abc.net.au/res/sites/news-projects/interactive-pill-text/icons/${year}/${name}.${extension}`;
+    return `https://www.abc.net.au/res/sites/news-projects/interactive-inline-pill-text/icons/${year}/${name}.${extension}`;
   });
+
+  const isMinimal = $derived(!border && !colour);
 </script>
 
-<span
-  class="inline-highlight"
-  class:inline-highlight--with-icon={iconUrl}
-  class:inline-highlight--with-border={border}
-  class:inline-highlight--minimal={!border && !colour}
-  style:--bgColour={colour}
-  style:--fgColour={text}
-  style:--borderColour={border}
->
-  {#if iconUrl}
-    <img src={iconUrl} alt="" class="inline-highlight__icon" />
-  {/if}
-  <FireFont>{name}</FireFont>
+<span class="inline-pill-wrapper" class:inline-pill-wrapper--active={!isMinimal}>
+  <span
+    class="inline-pill"
+    class:inline-pill--with-icon={iconUrl}
+    class:inline-pill--with-border={border}
+    class:inline-pill--minimal={isMinimal}
+    style:--bgColour={colour}
+    style:--fgColour={text}
+    style:--borderColour={border}
+  >
+    {#if iconUrl}
+      <img src={iconUrl} alt="" class="inline-pill__icon" />
+    {/if}
+    <span class="inline-pill__text" class:inline-pill__text--active={!isMinimal}>
+      {name}
+    </span>
+  </span>
 </span>
 
 <style lang="scss">
-  .inline-highlight {
+  .inline-pill-wrapper {
+    &--active {
+      /**
+       * Firefox-only: translate the whole pill UP.
+       * Requires display: inline-block to apply transform.
+       */
+      @supports (image-rendering: -moz-crisp-edges) {
+        display: inline-block;
+        translate: 0 -1px;
+      }
+    }
+  }
+
+  .inline-pill {
     position: relative;
     color: var(--fgColour, black);
     background: var(--bgColour, transparent);
@@ -72,7 +89,20 @@
       padding-right: calc(4px + 16px + 2px);
     }
 
-    .inline-highlight__icon {
+    .inline-pill__text {
+      &--active {
+        /**
+         * Firefox-only: translate the text DOWN within the pill to center it.
+         * Requires display: inline-block to apply transform.
+         */
+        @supports (image-rendering: -moz-crisp-edges) {
+          display: inline-block;
+          translate: 0 1px;
+        }
+      }
+    }
+
+    .inline-pill__icon {
       width: 16px;
       height: 16px;
       object-fit: contain;

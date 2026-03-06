@@ -1,6 +1,6 @@
 import { whenDOMReady } from '@abcnews/env-utils';
 import { mount } from 'svelte';
-import InlineHighlights from './components/InlineHighlights/InlineHighlights.svelte';
+import InlinePill from './components/InlinePill/InlinePill.svelte';
 import type { PillConfig } from './constants';
 import { selectMounts } from '@abcnews/mount-utils';
 import parse from '@abcnews/alternating-case-to-object';
@@ -13,7 +13,7 @@ function getPillConfig(text: string): PillConfig | null {
 }
 
 /**
- * Automatically find all <strong> tags and replace them with InlineHighlights components
+ * Automatically find all <strong> tags and replace them with InlinePill components
  * if they match any pill keywords.
  */
 function autoColorStrongTags() {
@@ -23,7 +23,7 @@ function autoColorStrongTags() {
     const config = getPillConfig(text);
 
     if (config && strong.parentNode) {
-      mount(InlineHighlights, {
+      mount(InlinePill, {
         target: strong.parentNode as Element,
         anchor: strong,
         props: {
