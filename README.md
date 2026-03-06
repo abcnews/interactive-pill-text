@@ -4,11 +4,11 @@ This project automatically highlights keywords in an article when they are wrapp
 
 ## How it works
 
-The script scans the DOM for all `<strong>` tags. If the text content matches a keyword defined in a Scrollyteller `pills` mount, it mounts the `InlineHighlights` component to replace the element with a styled "pill" representation.
+The script scans the DOM for all `<strong>` tags. If the text content matches a keyword defined in a `pills` marker, it mounts the `InlineHighlights` component to replace the element with a styled "pill" representation.
 
 ## Configuration
 
-Pill configurations are dynamic and defined via Scrollyteller mounts in the article using the [ACTO format](https://github.com/abcnews/alternating-case-to-object).
+Pill configurations are dynamic and defined via markers in the article using the [ACTO format](https://github.com/abcnews/alternating-case-to-object).
 
 ### Options
 
