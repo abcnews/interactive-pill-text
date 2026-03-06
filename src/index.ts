@@ -22,12 +22,10 @@ function autoColorStrongTags() {
     const text = strong.textContent || '';
     const config = getPillConfig(text);
 
-    if (config) {
-      const wrapper = document.createElement('span');
-      strong.parentNode?.replaceChild(wrapper, strong);
-
+    if (config && strong.parentNode) {
       mount(InlineHighlights, {
-        target: wrapper,
+        target: strong.parentNode as Element,
+        anchor: strong,
         props: {
           name: text,
           colour: `#${config.colour}`,
@@ -36,6 +34,8 @@ function autoColorStrongTags() {
           icon: config.icon
         }
       });
+
+      strong.parentNode.removeChild(strong);
     }
   });
 }
