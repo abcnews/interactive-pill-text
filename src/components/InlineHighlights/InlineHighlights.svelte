@@ -65,6 +65,7 @@
       padding: 1px 4px;
     }
     &--minimal {
+      font-size: 1em;
       padding: 0;
     }
     &--with-icon {
