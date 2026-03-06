@@ -28,9 +28,9 @@ function autoColorStrongTags() {
         anchor: strong,
         props: {
           name: text,
-          colour: `#${config.colour}`,
-          text: `#${config.text}`,
-          border: `#${config.border}`,
+          colour: config.colour ? `#${config.colour}` : undefined,
+          text: config.text ? `#${config.text}` : undefined,
+          border: config.border ? `#${config.border}` : undefined,
           icon: config.icon
         }
       });
