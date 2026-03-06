@@ -34,9 +34,11 @@
 <span
   class="inline-highlight"
   class:inline-highlight--with-icon={iconUrl}
-  style:--bg={colour}
-  style:--fg={text}
-  style:--border={border}
+  class:inline-highlight--with-border={border}
+  class:inline-highlight--minimal={!border && !colour}
+  style:--bgColour={colour}
+  style:--fgColour={text}
+  style:--borderColour={border}
 >
   {#if iconUrl}
     <img src={iconUrl} alt="" class="inline-highlight__icon" />
@@ -47,17 +49,24 @@
 <style lang="scss">
   .inline-highlight {
     position: relative;
-    color: var(--fg, black);
-    background: var(--bg, white);
+    color: var(--fgColour, black);
+    background: var(--bgColour, transparent);
     border-radius: 4px;
-    border: 3px solid var(--border, var(--background, white));
     font-family: ABCSans;
     font-size: 0.9em;
     font-style: normal;
     font-weight: 700;
     line-height: 150%;
-    padding: 0 4px;
+    padding: 3px 4px;
     white-space: nowrap;
+
+    &--with-border {
+      border: 2px solid var(--borderColour, transparent);
+      padding: 1px 4px;
+    }
+    &--minimal {
+      padding: 0;
+    }
     &--with-icon {
       padding-right: calc(4px + 16px + 2px);
     }
