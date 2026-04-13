@@ -25,7 +25,7 @@
       name = name.slice(0, -3);
     }
 
-    return `https://www.abc.net.au/res/sites/news-projects/interactive-inline-pill-text/icons/${year}/${name}.${extension}`;
+    return `https://www.abc.net.au/res/sites/news-projects/interactive-pill-text/icons/${year}/${name}.${extension}`;
   });
 
   const isMinimal = $derived(!border && !colour);
@@ -52,6 +52,8 @@
 
 <style lang="scss">
   .inline-pill-wrapper {
+    // revert inherited changes from .u-quote blocks in Firefox
+    text-indent: 0;
     &--active {
       /**
        * Firefox-only: translate the whole pill UP.
