@@ -42,7 +42,11 @@ function autoColorStrongTags() {
 
 // Ensure DOM is ready before running auto-replacement
 whenDOMReady.then(() => {
-  pillConfigs = selectMounts('pills').map(pill => parse(pill.id) as unknown as PillConfig);
+  pillConfigs = selectMounts('pills').map(pill => {
+    const config = parse(pill.id) as unknown as PillConfig;
+    pill.parentNode?.removeChild(pill);
+    return config;
+  });
   autoColorStrongTags();
 });
 
