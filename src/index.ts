@@ -1,4 +1,4 @@
-import { whenDOMReady } from '@abcnews/env-utils';
+import { whenOdysseyLoaded } from '@abcnews/env-utils';
 import { mount } from 'svelte';
 import InlinePill from './components/InlinePill/InlinePill.svelte';
 import type { PillConfig } from './constants';
@@ -41,7 +41,7 @@ function autoColorStrongTags() {
 }
 
 // Ensure DOM is ready before running auto-replacement
-whenDOMReady.then(() => {
+whenOdysseyLoaded.then(() => {
   pillConfigs = selectMounts('pills').map(pill => parse(pill.id) as unknown as PillConfig);
   autoColorStrongTags();
 });
