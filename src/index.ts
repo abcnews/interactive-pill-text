@@ -41,15 +41,16 @@ function autoColorStrongTags() {
   });
 }
 
-const observer = new MutationObserver(mutationList => {
+const updatePills = () => {
   let changed = false;
   selectMounts('pills').forEach(pill => {
     pillConfigs.push(parse(pill.id) as unknown as PillConfig);
     changed = true;
   });
-
   changed && autoColorStrongTags();
-});
+};
+
+const observer = new MutationObserver(updatePills);
 
 // Ensure DOM is ready before running auto-replacement
 Promise.all([whenOdysseyLoaded, proxy('interactive-pill-text')]).then(() => {
@@ -59,6 +60,7 @@ Promise.all([whenOdysseyLoaded, proxy('interactive-pill-text')]).then(() => {
       childList: true,
       subtree: true
     });
+  updatePills();
 });
 
 if (process.env.NODE_ENV === 'development') {
