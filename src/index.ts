@@ -41,10 +41,24 @@ function autoColorStrongTags() {
   });
 }
 
+const observer = new MutationObserver(mutationList => {
+  let changed = false;
+  selectMounts('pills').forEach(pill => {
+    pillConfigs.push(parse(pill.id) as unknown as PillConfig);
+    changed = true;
+  });
+
+  changed && autoColorStrongTags();
+});
+
 // Ensure DOM is ready before running auto-replacement
 Promise.all([whenOdysseyLoaded, proxy('interactive-pill-text')]).then(() => {
-  pillConfigs = selectMounts('pills').map(pill => parse(pill.id) as unknown as PillConfig);
-  autoColorStrongTags();
+  const main = document.querySelector('#content');
+  main &&
+    observer.observe(main, {
+      childList: true,
+      subtree: true
+    });
 });
 
 if (process.env.NODE_ENV === 'development') {
