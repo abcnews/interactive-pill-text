@@ -1,6 +1,6 @@
 {
 	"name": "interactive-pill-text",
-	"version": "3.0.9",
+	"version": "4.0.0",
 	"description": "A project generated from aunty's svelte project template.",
 	"license": "MIT",
 	"private": true,
