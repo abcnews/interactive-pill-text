@@ -8,7 +8,7 @@ import parse from '@abcnews/alternating-case-to-object';
 let pillConfigs: PillConfig[] = [];
 
 function getPillConfig(text: string): PillConfig | null {
-  const normalizedText = text.toLowerCase().trim();
+  const normalizedText = text.toLowerCase().replaceAll(/[^a-z0-9]/g, '');
   return pillConfigs.find(config => normalizedText.includes(String(config.keyword).toLowerCase())) || null;
 }
 
