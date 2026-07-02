@@ -4,6 +4,7 @@ import InlinePill from './components/InlinePill/InlinePill.svelte';
 import type { PillConfig } from './constants';
 import { selectMounts } from '@abcnews/mount-utils';
 import parse from '@abcnews/alternating-case-to-object';
+import { proxy } from '@abcnews/dev-proxy';
 
 let pillConfigs: PillConfig[] = [];
 
@@ -41,7 +42,7 @@ function autoColorStrongTags() {
 }
 
 // Ensure DOM is ready before running auto-replacement
-whenOdysseyLoaded.then(() => {
+Promise.all([whenOdysseyLoaded, proxy('interactive-pill-text')]).then(() => {
   pillConfigs = selectMounts('pills').map(pill => parse(pill.id) as unknown as PillConfig);
   autoColorStrongTags();
 });
