@@ -4,11 +4,28 @@ This project automatically highlights keywords in an article when they are wrapp
 
 ## How it works
 
-The script scans the DOM for all `<strong>` tags. If the text content matches a keyword defined in a `pills` marker, it mounts the `InlineHighlights` component to replace the element with a styled "pill" representation.
+The script scans for `<strong>` tags and colourises them based on the rules set by the author.
+
+1. If the text content matches a keyword defined in a `pills` marker, it mounts the `InlineHighlights` component to replace the element with a styled "pill" representation.
+1. If the text is in a decoy range with a pills config, all the strong tags will take the range value.
 
 ## Configuration
 
-Pill configurations are dynamic and defined via markers in the article using the [ACTO format](https://github.com/abcnews/alternating-case-to-object).
+Pill configurations are dynamic and defined via markers or ranges in the article using the [ACTO format](https://github.com/abcnews/alternating-case-to-object).
+
+e.g.
+
+```
+#pillsKEYWORDlaborCOLOURff0000
+```
+
+or
+
+```
+#startpillsCOLOURff0000
+The story of <strong>Labor</strong> is one of…
+#endpills
+```
 
 ### Options
 
