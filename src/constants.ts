@@ -4,4 +4,5 @@ export interface PillConfig {
   text?: string;
   border?: string;
   icon?: string;
+  headings?: boolean;
 }

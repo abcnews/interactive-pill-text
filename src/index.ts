@@ -38,12 +38,13 @@ function replaceStrong(strong: Element, config: PillConfig) {
   strong.parentNode.removeChild(strong);
 }
 
-/** Colour all headings and <strong> tags inside a range wrapper with the range's config. */
+/** Colour <strong> tags (and, if `headings: true`, headings) inside a range wrapper with the range's config. */
 function colourRanges() {
   document.querySelectorAll<HTMLElement>(RANGES).forEach(range => {
     const config = parse(range.dataset.tag || '') as unknown as PillConfig;
+    const includeHeadings = config.headings === true;
 
-    range.querySelectorAll(`${HEADINGS}, strong`).forEach(el => {
+    range.querySelectorAll(includeHeadings ? `${HEADINGS}, strong` : 'strong').forEach(el => {
       if (el.matches(HEADINGS)) {
         const text = el.textContent || '';
         if (!text.trim() || el.hasAttribute('data-pill-ranged')) return;

@@ -28,7 +28,8 @@
     return `https://www.abc.net.au/res/sites/news-projects/interactive-pill-text/icons/${year}/${name}.${extension}`;
   });
 
-  const isMinimal = $derived(!border && !colour);
+  let isMinimal = $derived(!border && !colour);
+  let shouldWrap = $derived(name.length > 45);
 </script>
 
 <span class="inline-pill-wrapper" class:inline-pill-wrapper--active={!isMinimal}>
@@ -37,6 +38,7 @@
     class:inline-pill--with-icon={iconUrl}
     class:inline-pill--with-border={border}
     class:inline-pill--minimal={isMinimal}
+    class:inline-pill--wrappable={shouldWrap}
     style:--bgColour={colour}
     style:--fgColour={text}
     style:--borderColour={border}
@@ -92,6 +94,9 @@
   .inline-pill--with-border {
     border: 2px solid var(--borderColour, transparent);
     padding: 1px 4px;
+  }
+  .inline-pill--wrappable {
+    white-space: unset;
   }
 
   .inline-pill--minimal {
