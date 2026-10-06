@@ -50,21 +50,28 @@
   </span>
 </span>
 
-<style lang="scss">
+<style>
+  /* ==========================================================================
+   Inline pill wrapper
+   ========================================================================== */
+
   .inline-pill-wrapper {
-    // revert inherited changes from .u-quote blocks in Firefox
+    /* revert inherited changes from .u-quote blocks in Firefox */
     text-indent: 0;
-    &--active {
-      /**
-       * Firefox-only: translate the whole pill UP.
-       * Requires display: inline-block to apply transform.
-       */
-      @supports (image-rendering: -moz-crisp-edges) {
-        display: inline-block;
-        translate: 0 -1px;
-      }
+  }
+
+  /* Firefox-only: translate the whole pill UP.
+   Requires display: inline-block to apply transform. */
+  @supports (image-rendering: -moz-crisp-edges) {
+    .inline-pill-wrapper--active {
+      display: inline-block;
+      translate: 0 -1px;
     }
   }
+
+  /* ==========================================================================
+   Inline pill
+   ========================================================================== */
 
   .inline-pill {
     position: relative;
@@ -78,40 +85,40 @@
     line-height: 150%;
     padding: 3px 4px;
     white-space: nowrap;
+  }
 
-    &--with-border {
-      border: 2px solid var(--borderColour, transparent);
-      padding: 1px 4px;
-    }
-    &--minimal {
-      font-size: 1em;
-      padding: 0;
-    }
-    &--with-icon {
-      padding-right: calc(4px + 16px + 2px);
-    }
+  /* Modifiers */
 
-    .inline-pill__text {
-      &--active {
-        /**
-         * Firefox-only: translate the text DOWN within the pill to center it.
-         * Requires display: inline-block to apply transform.
-         */
-        @supports (image-rendering: -moz-crisp-edges) {
-          display: inline-block;
-          translate: 0 1px;
-        }
-      }
-    }
+  .inline-pill--with-border {
+    border: 2px solid var(--borderColour, transparent);
+    padding: 1px 4px;
+  }
 
-    .inline-pill__icon {
-      width: 16px;
-      height: 16px;
-      object-fit: contain;
-      position: absolute;
-      right: 2px;
-      top: 50%;
-      transform: translateY(-50%);
+  .inline-pill--minimal {
+    font-size: 1em;
+    padding: 0;
+  }
+
+  .inline-pill--with-icon {
+    padding-right: calc(4px + 16px + 2px);
+  }
+
+  /* Firefox-only: translate the text DOWN within the pill to center it.
+   Requires display: inline-block to apply transform. */
+  @supports (image-rendering: -moz-crisp-edges) {
+    .inline-pill__text--active {
+      display: inline-block;
+      translate: 0 1px;
     }
+  }
+
+  .inline-pill__icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 </style>

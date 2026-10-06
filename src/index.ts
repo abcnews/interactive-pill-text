@@ -1,4 +1,4 @@
-import { whenOdysseyLoaded } from '@abcnews/env-utils';
+import { whenDOMReady, whenOdysseyLoaded } from '@abcnews/env-utils';
 import { mount } from 'svelte';
 import InlinePill from './components/InlinePill/InlinePill.svelte';
 import type { PillConfig } from './constants';
@@ -6,54 +6,80 @@ import { selectMounts } from '@abcnews/mount-utils';
 import parse from '@abcnews/alternating-case-to-object';
 import { proxy } from '@abcnews/dev-proxy';
 
-let pillConfigs: PillConfig[] = [];
+const HEADINGS = 'h1, h2, h3, h4, h5, h6';
+const RANGES = '[data-component="Decoy"][data-key="pills"][data-tag^="startpills"]';
 
-function getPillConfig(text: string): PillConfig | null {
-  const normalizedText = text.toLowerCase().replaceAll(/[^a-z0-9]/g, '');
-  return pillConfigs.find(config => normalizedText.includes(String(config.keyword).toLowerCase())) || null;
+let keywordConfigs: PillConfig[] = [];
+
+const normalise = (text: string) => text.toLowerCase().replaceAll(/[^a-z0-9]/g, '');
+
+function getKeywordConfig(text: string): PillConfig | null {
+  const normalizedText = normalise(text);
+  return keywordConfigs.find(config => normalizedText.includes(normalise(String(config.keyword)))) || null;
 }
 
-/**
- * Automatically find all <strong> tags and replace them with InlinePill components
- * if they match any pill keywords.
- */
-function autoColorStrongTags() {
-  const strongTags = document.querySelectorAll('strong');
-  strongTags.forEach(strong => {
-    const text = strong.textContent || '';
-    const config = getPillConfig(text);
-
-    if (config && strong.parentNode) {
-      mount(InlinePill, {
-        target: strong.parentNode as Element,
-        anchor: strong,
-        props: {
-          name: text,
-          colour: config.colour ? `#${config.colour}` : undefined,
-          text: config.text ? `#${config.text}` : undefined,
-          border: config.border ? `#${config.border}` : undefined,
-          icon: config.icon
-        }
-      });
-
-      strong.parentNode.removeChild(strong);
+function mountPill(target: Element, anchor: Element | undefined, name: string, config: PillConfig) {
+  mount(InlinePill, {
+    target,
+    anchor,
+    props: {
+      name,
+      colour: config.colour ? `#${config.colour}` : undefined,
+      text: config.text ? `#${config.text}` : undefined,
+      border: config.border ? `#${config.border}` : undefined,
+      icon: config.icon
     }
   });
 }
 
-const updatePills = () => {
-  let changed = false;
-  selectMounts('pills').forEach(pill => {
-    pillConfigs.push(parse(pill.id) as unknown as PillConfig);
-    changed = true;
+function replaceStrong(strong: Element, config: PillConfig) {
+  if (!strong.parentNode) return;
+  mountPill(strong.parentNode as Element, strong, strong.textContent || '', config);
+  strong.parentNode.removeChild(strong);
+}
+
+/** Colour all headings and <strong> tags inside a range wrapper with the range's config. */
+function colourRanges() {
+  document.querySelectorAll<HTMLElement>(RANGES).forEach(range => {
+    const config = parse(range.dataset.tag || '') as unknown as PillConfig;
+
+    range.querySelectorAll(`${HEADINGS}, strong`).forEach(el => {
+      if (el.matches(HEADINGS)) {
+        const text = el.textContent || '';
+        if (!text.trim() || el.hasAttribute('data-pill-ranged')) return;
+        el.setAttribute('data-pill-ranged', '');
+        el.textContent = '';
+        mountPill(el, undefined, text, config);
+      } else if (!el.closest(HEADINGS)) {
+        replaceStrong(el, config);
+      }
+    });
   });
-  changed && autoColorStrongTags();
+}
+
+/** Keyword matching for any <strong> left over after ranges have run. */
+function colourKeywords() {
+  if (!keywordConfigs.length) return;
+  document.querySelectorAll('strong').forEach(strong => {
+    const config = getKeywordConfig(strong.textContent || '');
+    config && replaceStrong(strong, config);
+  });
+}
+
+const updatePills = () => {
+  keywordConfigs = selectMounts('pills').map(pill => parse(pill.id) as unknown as PillConfig);
+
+  // Ranges first, so they take priority over keyword matches
+  colourRanges();
+  colourKeywords();
 };
 
 const observer = new MutationObserver(updatePills);
 
+const contentLoaded = document.getElementById('pillsODYSSEYfalse') ? whenDOMReady : whenOdysseyLoaded;
+
 // Ensure DOM is ready before running auto-replacement
-Promise.all([whenOdysseyLoaded, proxy('interactive-pill-text')]).then(() => {
+Promise.all([contentLoaded, proxy('interactive-pill-text')]).then(() => {
   const main = document.querySelector('#content');
   main &&
     observer.observe(main, {
@@ -62,7 +88,3 @@ Promise.all([whenOdysseyLoaded, proxy('interactive-pill-text')]).then(() => {
     });
   updatePills();
 });
-
-if (process.env.NODE_ENV === 'development') {
-  console.debug(`[interactive-pill-text] public path: ${__webpack_public_path__}`);
-}
