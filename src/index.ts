@@ -42,12 +42,13 @@ function autoColorStrongTags() {
 }
 
 const updatePills = () => {
-  let changed = false;
+  // Fetch new pill configs that may have appeared later
   selectMounts('pills').forEach(pill => {
     pillConfigs.push(parse(pill.id) as unknown as PillConfig);
-    changed = true;
   });
-  changed && autoColorStrongTags();
+
+  // Colourise with any new pill configs, or any newly found pills
+  autoColorStrongTags();
 };
 
 const observer = new MutationObserver(updatePills);
