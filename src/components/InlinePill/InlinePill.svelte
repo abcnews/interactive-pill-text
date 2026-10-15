@@ -54,6 +54,8 @@
   .inline-pill-wrapper {
     // revert inherited changes from .u-quote blocks in Firefox
     text-indent: 0;
+    white-space: nowrap;
+    display: inline-block;
     &--active {
       /**
        * Firefox-only: translate the whole pill UP.
@@ -77,7 +79,6 @@
     font-weight: 700;
     line-height: 150%;
     padding: 3px 4px;
-    white-space: nowrap;
 
     &--with-border {
       border: 2px solid var(--borderColour, transparent);
