@@ -1,4 +1,4 @@
-import { whenOdysseyLoaded } from '@abcnews/env-utils';
+import { whenDOMReady, whenOdysseyLoaded } from '@abcnews/env-utils';
 import { mount } from 'svelte';
 import InlinePill from './components/InlinePill/InlinePill.svelte';
 import type { PillConfig } from './constants';
@@ -54,7 +54,9 @@ const updatePills = () => {
 const observer = new MutationObserver(updatePills);
 
 // Ensure DOM is ready before running auto-replacement
-Promise.all([whenOdysseyLoaded, proxy('interactive-pill-text')]).then(() => {
+const useDOMReady = selectMounts('pillsODYSSEYfalse');
+const contentLoaded = useDOMReady.length ? whenDOMReady : whenOdysseyLoaded;
+Promise.all([contentLoaded, proxy('interactive-pill-text')]).then(() => {
   const main = document.querySelector('#content');
   main &&
     observer.observe(main, {
