@@ -45,6 +45,9 @@ const updatePills = () => {
   // Fetch new pill configs that may have appeared later
   selectMounts('pills').forEach(pill => {
     pillConfigs.push(parse(pill.id) as unknown as PillConfig);
+    if (pill instanceof HTMLDivElement && pill.dataset?.component === 'Anchor') {
+      pill.style.display = 'none';
+    }
   });
 
   // Colourise with any new pill configs, or any newly found pills
